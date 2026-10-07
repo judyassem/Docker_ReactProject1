@@ -3,14 +3,14 @@ pipeline{
         label 'docker'
     }
     stages{
-        stage{'build Docker Image'} {
+        stage('build Docker Image'){
             steps{
                 script{
                     sh 'docker build -t judyassem/docker-react -f Dockerfile.dev .'
                 }
             }
         }
-        stage{'Run Tests'}{
+        stage('Run Tests'){
             steps{
                 script{
                     env.DOCKER_BUILDKIT = 1
