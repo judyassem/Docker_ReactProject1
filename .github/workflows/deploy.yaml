@@ -1,0 +1,13 @@
+name: Deploy-react
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-24
+    steps:
+      - users: action/checkout@v2
+      - run: docker login -u 
