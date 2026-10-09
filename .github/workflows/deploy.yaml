@@ -1,15 +1,30 @@
-#name: Deploy-react # name of the work flow
-#
-#on: # when to trigger the workflow 
-#  push:
-#    branches:
-#      - master #everytime someone pushes on master
-#
-#jobs: # steps run in sequence 
-#  build: # job name
-#    runs-on: ubuntu-latest # os to run job on 
-#    steps: # indvidual tasks inside the job
-#      - uses: actions/checkout@v2 # pre-built action 
-#      - run: docker login -u ${{secrets.DOCKER_USERNAME }} -p ${{secrets.DOCKER_PASSWORD }}
-#      - run: docker build -t judyassem/react-test -f Dockerfile.dev .
-#      - run: docker run -e CI=true judyassem/react-test npm run test
+name: Deploy-react # name of the work flow
+
+on: # when to trigger the workflow 
+  push:
+    branches:
+      - master #everytime someone pushes on master
+
+jobs: # steps run in sequence 
+  build: # job name
+    runs-on: ubuntu-latest # os to run job on 
+    steps: # indvidual tasks inside the job
+      - uses: actions/checkout@v2 # pre-built action 
+      - run: docker login -u ${{secrets.DOCKER_USERNAME }} -p ${{secrets.DOCKER_PASSWORD }}
+      - run: docker build -t judyassem/react-test -f Dockerfile.dev .
+      - run: docker run -e CI=true judyassem/react-test npm run test
+
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: "ReactProject"
+          environment_name: "ReactProject-env"
+          version_label: ${{ github.sha }}
+          region: eu-north-1
+          deployment_package: deploy.zip
