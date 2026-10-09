@@ -23,8 +23,8 @@ jobs: # steps run in sequence
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: "ReactProject"
-          environment_name: "ReactProject-env"
+          application_name: "ReactProject2"
+          environment_name: "ReactProject2-env"
           version_label: ${{ github.sha }}
           region: eu-north-1
           deployment_package: deploy.zip
